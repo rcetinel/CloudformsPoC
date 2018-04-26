@@ -23,4 +23,8 @@
             path: C:\temp\7z.msi
             product_id: '{23170F69-40C1-2702-1701-000001000000}'
             state: present
+          register: result
+          retries: 3
+          delay: 20
+          until: result.rc == 0
       when: install_7zip =="t"
