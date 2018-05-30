@@ -31,7 +31,7 @@
       when: install_7zip =="t"
     - name: Visual Studio 2017 Installation Procedure 
       block:
-        - name: Download VS2017
+        - name: VS2017
           win_get_url:
             url: http://{{ repo_server_name }}/pub/privatecloud/VS2017Offline.zip
             dest: C:\temp\VS2017Offline.zip
@@ -42,8 +42,13 @@
             delete_archive: true
         - name: Install .Net Framework Installation
           win_shell: 'C:\VS2017Offline\Prepare\net_framework_4_1.exe /q /norestart'
+          args:
+            executable: cmd
         - name: Import SSL Certificates 
           win_shell: 'C:\VS2017Offline\import_certificates.bat'
+          args:
+            executable: cmd
         - name: Install Visual Studio 2017
           win_shell: 'C:\VS2017Offline\vs_Enterprise.exe --add Microsoft.VisualStudio.Workload.ManagedDesktop --includeRecommended --quiet --wait --noWeb'
-      when: install_vs2017 =="t"
+          args:
+            executable: cmd
