@@ -29,22 +29,3 @@
           until: result.rc == 0
           ignore_errors: yes
       when: install_7zip =="t"
-    - name: Download and Unzip VS2017 ZIP File
-      block:
-        - name: Download VS Installer
-          win_get_url:
-            url: http://{{ repo_server_name }}/pub/privatecloud/VS2017Offline.zip
-            dest: C:\temp\VS2017Offline.zip
-        - name: unzip VS2017
-          win_unzip:
-            src: C:\temp\VS2017Offline.zip
-            dest: C:\
-            delete_archive: true
-    - name: Installation of VS2017
-      block:            
-        - name: .Net Framework Installation
-          win_shell: 'C:\VS2017Offline\Prepare\net_framework_4_1.exe /q /norestart'
-        - name: import SSL Certificates of Microsoft Offline Installation
-          win_shell: 'C:\VS2017Offline\import_certificates.bat'
-        - name: install VS2017
-          win_shell: 'C:\VS2017Offline\vs_Enterprise.exe --add Microsoft.VisualStudio.Workload.ManagedDesktop --includeRecommended --quiet --wait --noWeb'
