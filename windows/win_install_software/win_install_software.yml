@@ -39,6 +39,7 @@
           win_unzip:
             src: C:\temp\VS2017Offline.zip
             dest: C:\
+            delete_archive: true            
           register: result
           retries: 3
           delay: 210
