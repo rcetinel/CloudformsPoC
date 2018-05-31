@@ -1,0 +1,59 @@
+---
+  - hosts: all
+
+    tasks:
+    - name: BGinfo installer
+      block:
+        - name: copy BGinfo 
+          win_get_url:
+            url: http://{{ repo_server_name }}/pub/privatecloud/Bginfo64.exe
+            dest: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\Bginfo64.exe
+        - name: run BGinfo
+          win_shell: '"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\Bginfo64.exe" -accepteula -timer=0'
+          args:
+            executable: cmd
+    - name: 7zip installer
+      block:
+        - name: copy 7zip installer
+          win_get_url:
+            url: http://{{ repo_server_name }}/pub/privatecloud/7z1701-x64.msi
+            dest: C:\temp\7z.msi
+        - name: ensure 7-Zip is installed via win_package
+          win_package:
+            path: C:\temp\7z.msi
+            product_id: '{23170F69-40C1-2702-1701-000001000000}'
+            state: present
+          register: result
+          retries: 3
+          delay: 60
+          until: result.rc == 0
+          ignore_errors: yes
+      when: install_7zip =="t"
+    - name: Visual Studio 2017 Installation Procedure 
+      block:
+        - name: VS2017
+          win_get_url:
+            url: http://{{ repo_server_name }}/pub/privatecloud/VS2017Offline.zip
+            dest: C:\temp\VS2017Offline.zip
+        - name: Unzip VS2017
+          win_unzip:
+            src: C:\temp\VS2017Offline.zip
+            dest: C:\
+          register: result
+          retries: 3
+          delay: 210
+          until: result.rc == 0
+    - name: Install .Net Framework Installation
+      block:
+        - name: Install Framework
+          win_shell: C:\VS2017Offline\Prepare\net_framework_4_1.exe /q /norestart
+        - name: Import SSL Certificates 
+          win_shell: C:\VS2017Offline\import_certificates.bat
+        - name: Install Visual Studio 2017
+          win_shell: C:\VS2017Offline\vs_Enterprise.exe --add Microsoft.VisualStudio.Workload.ManagedDesktop --includeRecommended --quiet --wait --noWeb
+          register: result
+          retries: 3
+          delay: 120
+          until: result.rc == 0
+          ignore_errors: yes
+      when: install_vs2017 =="t"
