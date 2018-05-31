@@ -39,21 +39,27 @@
           win_unzip:
             src: C:\temp\VS2017Offline.zip
             dest: C:\
+            delete_archive: true
+        - name: Install .Net Framework Installation
+          win_shell: 'C:\VS2017Offline\Prepare\net_framework_4_1.exe /q /norestart'
           register: result
           retries: 3
-          delay: 210
-          until: result.rc == 0
-    - name: Install .Net Framework Installation
-      block:
-        - name: Install Framework
-          win_shell: C:\VS2017Offline\Prepare\net_framework_4_1.exe /q /norestart
-        - name: Import SSL Certificates 
-          win_shell: C:\VS2017Offline\import_certificates.bat
-        - name: Install Visual Studio 2017
-          win_shell: C:\VS2017Offline\vs_Enterprise.exe --add Microsoft.VisualStudio.Workload.ManagedDesktop --includeRecommended --quiet --wait --noWeb
-          register: result
-          retries: 3
-          delay: 120
+          delay: 60
           until: result.rc == 0
           ignore_errors: yes
+          args:
+            executable: cmd
+        - name: Import SSL Certificates 
+          win_shell: 'C:\VS2017Offline\import_certificates.bat'
+          args:
+            executable: cmd
+        - name: Install Visual Studio 2017
+          win_shell: 'C:\VS2017Offline\vs_Enterprise.exe --add Microsoft.VisualStudio.Workload.ManagedDesktop --includeRecommended --quiet --wait --noWeb'
+          register: result
+          retries: 3
+          delay: 60
+          until: result.rc == 0
+          ignore_errors: yes
+          args:
+            executable: cmd
       when: install_vs2017 =="t"
