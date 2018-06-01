@@ -6,7 +6,7 @@
       block:
         - name: copy BGinfo 
           win_get_url:
-            url: http://{{ repo_server_name }}/pub/privatecloud/Bginfo64.exe
+            url: http://10.133.43.231/pub/privatecloud/Bginfo64.exe
             dest: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\Bginfo64.exe
         - name: run BGinfo
           win_shell: '"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\Bginfo64.exe" -accepteula -timer=0'
@@ -16,7 +16,7 @@
       block:
         - name: copy 7zip installer
           win_get_url:
-            url: http://{{ repo_server_name }}/pub/privatecloud/7z1701-x64.msi
+            url: http://10.133.43.231/pub/privatecloud/7z1701-x64.msi
             dest: C:\temp\7z.msi
         - name: ensure 7-Zip is installed via win_package
           win_package:
@@ -33,7 +33,7 @@
       block:
         - name: VS2017
           win_get_url:
-            url: http://{{ repo_server_name }}/pub/privatecloud/VS2017Offline.zip
+            url: http://10.133.43.231/pub/privatecloud/VS2017Offline.zip
             dest: C:\temp\VS2017Offline.zip
         - name: Unzip VS2017
           win_unzip:
